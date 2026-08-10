@@ -1,5 +1,5 @@
-/* 围桌写字 - Service Worker：缓存应用外壳，支持离线打开与更快启动 */
-const CACHE = 'circle-write-v2';
+/* 围桌写字 - Service Worker：优先联网拿最新版，断网时用缓存兜底 */
+const CACHE = 'circle-write-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -31,18 +31,18 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
+  // 优先联网：保证代码更新立即生效；失败（离线）时才用缓存兜底
   e.respondWith(
-    caches.match(e.request).then((hit) => {
-      if (hit) return hit;
-      return fetch(e.request)
-        .then((res) => {
-          if (res && res.status === 200 && e.request.url.startsWith(self.location.origin)) {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(e.request, copy)).catch(() => {});
-          }
-          return res;
-        })
-        .catch(() => caches.match('./index.html'));
-    })
+    fetch(e.request)
+      .then((res) => {
+        if (res && res.status === 200 && e.request.url.startsWith(self.location.origin)) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(e.request, copy)).catch(() => {});
+        }
+        return res;
+      })
+      .catch(() =>
+        caches.match(e.request).then((hit) => hit || caches.match('./index.html'))
+      )
   );
 });
