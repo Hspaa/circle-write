@@ -50,10 +50,11 @@
           <li>一个人点「创建房间」，把 4 位房间码告诉朋友。</li>
           <li>大家输入昵称和房间码入座，围桌而坐。</li>
           <li>每人面前有一块文字板：你能看到并<b>编辑别人</b>的板子。</li>
+          <li>手机上点别人的板子会进入<b>全屏编辑</b>，写完后点「完成」。</li>
           <li>你自己面前的板子是<b>遮住的</b>，别人写了什么你看不到。</li>
           <li>正在被编辑的板子会显示「XX 正在编辑…」，其他人只读。</li>
           <li>房主可以一键「清空板子」重新开始。</li>
-          <li>建议把设备<b>横过来</b>玩 📱↔️，最多 8 人一桌。</li>
+          <li>手机<b>竖屏/横屏</b>都能玩，最多 8 人一桌。</li>
         </ol>
       </details>
 
@@ -91,10 +92,26 @@
     </main>
   </div>
 
-  <!-- ============ 竖屏提示 ============ -->
-  <div id="portrait-warning" class="portrait-warning hidden">
-    <div class="pw-icon">🔄</div>
-    <p>请将设备横过来使用</p>
+  <!-- ============ 全屏编辑模式（触摸端） ============ -->
+  <div id="edit-modal" class="hidden">
+    <div class="edit-header">
+      <div class="edit-title">✏️ 正在给 <b id="edit-target-name">…</b> 写</div>
+      <button id="edit-done" class="btn primary">完成</button>
+    </div>
+    <textarea id="edit-input" maxlength="500" placeholder="想写点什么…" spellcheck="false"></textarea>
+    <div id="edit-lockbar" class="lockbar hidden"></div>
+    <div class="edit-hint">点遮罩空白处或「完成」结束编辑</div>
+  </div>
+
+  <!-- ============ 确认对话框 ============ -->
+  <div id="confirm-modal" class="hidden">
+    <div class="confirm-box">
+      <div class="confirm-title" id="confirm-title">确定吗？</div>
+      <div class="confirm-actions">
+        <button id="confirm-no" class="btn ghost">取消</button>
+        <button id="confirm-yes" class="btn danger">确定</button>
+      </div>
+    </div>
   </div>
 
   <!-- ============ Toast ============ -->

@@ -29,6 +29,13 @@ for _ in $(seq 1 30); do
   sleep 0.4
 done
 
+# 检测代理/VPN（常见工具使用 198.18.0.0/15 虚拟网段接管流量）
+if ifconfig 2>/dev/null | grep -qE 'inet (198\.18\.|10\.10\.)'; then
+  echo ""
+  echo "⚠️  检测到代理/VPN 正在接管网络（198.18.x.x），它可能会拦截隧道连接！"
+  echo "    如果一会儿网址打不开，请先【暂时关闭代理/VPN】，再运行本脚本。"
+fi
+
 echo ""
 echo "🌐 正在建立公网隧道（Cloudflare）..."
 echo "   请等待出现 https://xxxx.trycloudflare.com 这样的网址，"

@@ -1,5 +1,5 @@
 /* 围桌写字 - Service Worker：缓存应用外壳，支持离线打开与更快启动 */
-const CACHE = 'circle-write-v1';
+const CACHE = 'circle-write-v2';
 const ASSETS = [
   './',
   './index.html',
