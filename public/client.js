@@ -159,9 +159,10 @@ function buildSeat(p) {
   const card = el('div', 'seat' + (isSelf ? ' self' : ''));
   card.dataset.seat = p.seat;
 
-  // 头部：头像 + 名字 + 徽章
+  // 头部：头像（显示座位号）+ 名字 + 徽章
   const head = el('div', 'seat-head');
-  const av = el('span', 'avatar', (p.name || '?').trim().slice(0, 1).toUpperCase());
+  const av = el('span', 'avatar', String(p.seat + 1)); // 1号位起，对应内部 seat 0 起
+  av.title = p.name + ' · ' + (p.seat + 1) + '号位';
   const nm = el('span', 'sname', p.name);
   nm.title = p.name;
   head.appendChild(av);

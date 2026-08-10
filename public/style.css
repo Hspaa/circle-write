@@ -204,11 +204,12 @@ input, textarea { font: inherit; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
 }
 .seat:nth-child(even) .avatar { background: linear-gradient(135deg, #f472b6, #7c3aed); }
 .seat:nth-child(3n) .avatar { background: linear-gradient(135deg, #34d399, #0d9488); }
+.seat.self .avatar { background: linear-gradient(135deg, #f59e0b, #f97316); }
 
 .sname {
   font-size: 14px;
