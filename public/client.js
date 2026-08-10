@@ -26,6 +26,7 @@ const state = {
 
 let activeSeat = null;  // 桌面端：当前聚焦的板子座位号
 let editingSeat = null; // 触摸端：全屏编辑中的板子座位号
+let editingLocked = false; // 触摸端：是否已拿到正在编辑板子的编辑锁
 
 /* ---------------- 小工具 ---------------- */
 
@@ -275,6 +276,12 @@ function updatePreview(preview, seat) {
   }
 }
 
+function refreshCardPreview(seat) {
+  const card = seatCard(seat);
+  const preview = card && card.querySelector('.board-preview');
+  if (preview) updatePreview(preview, seat);
+}
+
 function syncPreviewLock(preview, lockbar, seat) {
   const editorId = state.editors[seat];
   if (editorId && editorId !== socket.id) {
@@ -342,6 +349,7 @@ function openEdit(seat) {
     return;
   }
   editingSeat = seat;
+  editingLocked = false;
   $('#edit-target-name').textContent = p.name;
   const ta = $('#edit-input');
   ta.value = state.boards[seat] || '';
@@ -353,6 +361,8 @@ function openEdit(seat) {
     if (res && res.ok === false) {
       toast('这块板子正有人在写，等 TA 写完吧');
       closeEdit(true);
+    } else if (res && res.ok && editingSeat === seat) {
+      editingLocked = true; // 拿到编辑权后才算数
     }
   });
 }
@@ -360,8 +370,12 @@ function openEdit(seat) {
 function closeEdit(skipUnlock) {
   const seat = editingSeat;
   editingSeat = null;
+  editingLocked = false;
   $('#edit-modal').classList.add('hidden');
-  if (!skipUnlock && seat != null) socket.emit('board:unlock', { seat });
+  if (!skipUnlock && seat != null) {
+    socket.emit('board:unlock', { seat });
+    refreshCardPreview(seat); // 关闭编辑后刷新预览，立即显示刚写的内容
+  }
 }
 
 function updateEditLockbar() {
@@ -381,10 +395,11 @@ function updateEditLockbar() {
 }
 
 $('#edit-input').addEventListener('input', () => {
-  if (editingSeat != null) {
+  if (editingSeat != null && editingLocked) {
     const t = $('#edit-input').value;
     state.boards[editingSeat] = t;
     socket.emit('board:update', { seat: editingSeat, text: t });
+    refreshCardPreview(editingSeat); // 打字时同步刷新预览卡
   }
 });
 
