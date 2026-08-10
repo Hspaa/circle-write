@@ -1,0 +1,23 @@
+{
+  "name": "circle-write",
+  "version": "1.0.0",
+  "description": "围桌写字：多人实时在线游戏——每个人面前有一块文字板，别人可以在上面写字，但你自己看不到自己板子上的内容（PWA，横屏）",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "icons": "node scripts/generate-icons.js",
+    "test": "node scripts/smoke-test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.7.5"
+  }
+}

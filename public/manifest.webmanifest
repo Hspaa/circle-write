@@ -1,0 +1,16 @@
+{
+  "name": "围桌写字",
+  "short_name": "围桌写字",
+  "description": "多人实时在线游戏：每个人面前有一块文字板，别人可以在上面写字，但你看不到自己板子上的内容。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#0b1220",
+  "theme_color": "#4f46e5",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
