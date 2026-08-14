@@ -254,11 +254,27 @@ io.on('connection', (socket) => {
 server.listen(PORT, '0.0.0.0', () => {
   console.log('✏️ 围桌写字 已启动');
   console.log(`  本机访问:     http://localhost:${PORT}`);
-  const ips = Object.values(os.networkInterfaces())
-    .flat()
-    .filter((n) => n && n.family === 'IPv4' && !n.internal)
-    .map((n) => n.address);
-  for (const ip of ips) {
+
+  // 只列出真正的局域网地址（跳过代理/隧道等虚拟网卡）
+  const lan = Object.entries(os.networkInterfaces())
+    .flatMap(([name, addrs]) =>
+      (addrs || [])
+        .filter((a) => a.family === 'IPv4' && !a.internal)
+        .filter((a) => !/^(utun|awdl|llw|anpi|bridge|gif|stf|ap|lo)/.test(name))
+        .map((a) => a.address)
+    );
+  for (const ip of lan) {
     console.log(`  局域网访问:   http://${ip}:${PORT}   （同一 Wi-Fi 下的手机/平板/电脑都能打开）`);
+  }
+
+  // 二维码：手机相机扫码直接加入（需已安装 qrcode-terminal）
+  if (lan.length) {
+    try {
+      const qr = require('qrcode-terminal');
+      console.log('\n  📱 让朋友用手机相机扫下面的二维码加入:');
+      qr.generate(`http://${lan[0]}:${PORT}`, { small: true });
+    } catch (e) {
+      /* qrcode-terminal 未安装时跳过（不影响使用） */
+    }
   }
 });
